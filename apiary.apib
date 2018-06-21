@@ -1,0 +1,192 @@
+FORMAT: 1A
+HOST: https://hellobooksv1-api-heroku.herokuapp.com/ 
+
+# Hello Books API
+
+Hello Books is a simple API designed to ease library systems functionalities. 
+Actions like registering library clients, holding book information, allow users
+to search and browse all books as well as borrow and return books. Each functionality
+is implemented as an endpoint, all endpoints are listed as follows
+allowing consumers to view polls and vote in them.
+
+
+## Book Collection [/api/v1/books]
+
+### Add to the Book Collection [POST]
+A new book is added to the catalogue.
+
++ Request (application/json)
+
+        {
+            "author":"Juma",
+            "title":"Da Vinci Code"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "mesage": "book added"
+        }
+    
+
+### Edit an existing Book [PUT]
+API point two
+
++ Request (application/json)
+
+        {
+            "ISBN":3,
+            "title":"Part three Angels and demons",
+            "author":"Jason Bourne"
+        }
+    
++ Response 200
+
+        {
+            "current details":
+            {
+                "author": "Ken Follet",
+                "title": "Done Deal"
+            }
+        }
+
+### List All Books [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "title": "The Eleventh Commandment",
+                "author": "Jeffrey Archer",
+                "ISBN": 1
+            },
+            {
+                "title": "If Tomorrow Comes",
+                "author": "Sidney Sheldon",
+                "ISBN": 2
+            },
+            {
+                "title": "Memory Man",
+                "ISBN": 4
+            },
+            {
+                "title": "A time to kill",
+                "author": "John Grisham",
+                "ISBN": 5
+            },
+            {
+                "title": "The Pillars of the Earth",
+                "author": "Ken Follet",
+                "ISBN": 6
+            },
+            {
+                "title": "Done Deal",
+                "author": "Ken Follet",
+                "ISBN": 7
+            },
+            {
+                "title": "The outlet and Gober",
+                "author": "Ken Follet",
+                "ISBN": 8
+            }
+        ]
+        
+## Get one Book Collection [/api/v1/books/2]
+
+###Fetch one book[GET]
+
++ Response 200
+
+        [
+            {
+                "Book": 
+                    {
+                        "ISBN": 2,
+                        "title": "If Tomorrow Comes",
+                        "author": "Sidney Sheldon"
+                    }
+                    },
+                    {
+                        "message": "Gets a specific book"
+                    }
+        ]
+
+
+## Register to User List Collection [/api/v1/auth/register]
+
+### Register user[POST]
+
++ Request
+
+        {
+            "username":"This",
+            "password":"pass234"
+        }
+
++ Response 200
+
+        {
+            "message": "user created"
+        }
+
+## Login to User List Collection [/api/v1/auth/login]
+### Login User[POST]
+
++ Request
+
+        {
+            "username":"This",
+            "password":"pass234"
+        }
+
+
++ Response 200
+
+        {
+            "message": "welcome, login success"
+        }
+
++ Response 404
+
+        {
+            "message": "check username or password and try again"
+        }
+
+### Fetch all users [GET]
+
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            [
+                [
+                    {
+                        "username": "Mwenda Kifikifi",
+                        "userid": 2,
+                        "logged in": false
+                    },
+                    {
+                        "username": "Khololosia Mbi",
+                        "userid": 3,
+                        "logged in": false
+                    },
+                    {
+                        "username": "Kinde Kinde",
+                        "userid": 4,
+                        "logged in": false
+                    },
+                    {
+                        "username": "Mainmuna Swazi",
+                        "userid": 1,
+                        "logged in": false
+                    }
+                ],
+                {
+                    "message": "fetched User"
+                }
+            ]
