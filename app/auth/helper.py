@@ -56,10 +56,10 @@ def response(status, message, status_code):
     :param status_code: Http status code
     :return:
     """
-    return make_response(jsonify({
+    return {
         'status': status,
         'message': message
-    })), status_code
+    }
 
 
 def response_auth(status, message, token, status_code):
@@ -71,8 +71,8 @@ def response_auth(status, message, token, status_code):
     :param status_code: Http status code
     :return: Http Json response
     """
-    return make_response({
+    return {
         'status': status,
         'message': message,
         'auth_token': token
-    }), status_code
+    }

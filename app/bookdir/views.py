@@ -24,22 +24,19 @@ from app.bookdir.models import Book
 
 class books(Resource):
     @classmethod
-    def get(self, ISBN=None):
-        ISBN = request.args['ISBN']
-        if ISBN != None:
-            book_to_find = Book.get_by_isbn(ISBN)
+    def get(cls, isbn=None):
+        #return {"Hapa   ndio" : isbn}
+        print(isbn)
+        #isbn = request.args['isbn']
+        print(isbn)
+        if isbn != None:
+            book_to_find = Book.get_by_isbn(isbn)
             if not book_to_find:
                 return {'message': 'Item not found'}, 404
             return ({'book': {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'author': book_to_find.author}},
                     {'message': 'Gets a specific book'}), 200
         else:
-            manyitems = []
-            if len(books_list) < 1:
-                return 'books not found', 404
-            for book in books_list:
-                manyitems.append(
-                    {'ISBN': book.ISBN, 'title': book.title, 'author': book.author})
-            return manyitems, 200
+            return Book.get_many()
 
     @classmethod
     def make_response(self, Book):

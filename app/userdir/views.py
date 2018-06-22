@@ -2,29 +2,8 @@ from flask_restful import Resource
 from flask import request
 
 #from app.bookdir.views import books_list
-from app.userdir.models import User
-from app.bookdir.models import Book
-
-# # Create dummy users dataset to hold dummy users
-# users_list = []
-# user1 = User(1,'Mainmuna Swazi','pass123')
-# user2 = User(2,'Mwenda Kifikifi','pass123')
-# user3 = User(3,'Khololosia Mbi','pass123')
-# user4 = User(4,'Kinde Kinde','pass123')
-# user4.isadmin = True
-# user4.active = True
-# user5 = User(5,'Miguna','pass123')
-# user5.active = True
-# users_list.append(user2)
-# users_list.append(user3)
-# users_list.append(user4)
-# users_list.append(user5)
-# borrowed_books = []
-# book1 = Book(1,'The Eleventh Commandment','Jeffrey Archer')
-# book2 = Book(2,'If Tomorrow Comes','Sidney Sheldon')
-# user1.borrowed_books.append(book1)
-# user1.borrowed_books.append(book2)
-# users_list.append(user1)
+#from app.userdir.models import User
+from app.bookdir.models import Book, BorrowedBook
 
 
 class Users(Resource):
@@ -52,8 +31,41 @@ class Users(Resource):
 
 class Borrow(Resource):
     @classmethod
-    def post(self, ISBN=None):
+    def post(self, book_id=None):
+        book_instance = Book.query.filter_by(book_id=book_id).first()
+        if not book_instance:
+            return {"error": "book not found"}, 404
+        # check if book is borrowed
+        if not book_instance.available:
+            return {"message": "Book unavailable, please try later"}, 400
+
+        if not request.get_json():
+            return 'User details missing',401
         req_data = request.get_json()
+        this_user = req_data["user_id"]
+        BorrowedBook(this_user, book_instance.book_id).save()
+        return {"message": "Borrow Success"}, 200
+
+
+class Return(Resource):
+    @classmethod
+    def put(self, book_id=None):
+        book_instance = BorrowedBook.query.filter_by(book_id=book_id).first()
+        if not book_instance:
+            return {"error": "book not found"}, 404
+        # check if book is borrowed
+        if book_instance.return_status:
+            return {"message": "Book has already been returned"}, 400
+
+        if not request.get_json():
+            return 'User details missing', 401
+        #req_data = request.get_json()
+        #this_user = req_data["user_id"]
+        book_instance.return_book()
+        return {"message": "Return Success"}, 200
+
+
+""""req_data = request.get_json()
         if not request.get_json():
             return 'User details missing',401
         recieved_ISBN = ISBN
@@ -72,4 +84,4 @@ class Borrow(Resource):
                 return {"message": "no book found with the given book id"}, 404
             else:
                 borrowed = book[0].title
-                return (borrowed, {'message': 'book borrowed'}), 200
+                return (borrowed, {'message': 'book borrowed'}), 200"""
