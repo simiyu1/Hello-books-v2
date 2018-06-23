@@ -89,7 +89,6 @@ class Reset(Resource):
             user.reset_password(new_password)
             return response('success', 'Password reset successfully', 200)
         return response('failed', "Incorrect password", 401)
-        return response('failed', 'Content type must be json', 400)
 
 
 class Logout(Resource):
