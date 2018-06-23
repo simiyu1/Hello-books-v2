@@ -1,10 +1,11 @@
 from flask_restful import Resource
 from flask import request
 
+
 #from app.bookdir.views import books_list
 #from app.userdir.models import User
 from app.bookdir.models import Book, BorrowedBook
-
+from app.auth.helper import token_required
 
 class Users(Resource):
     @classmethod
@@ -29,10 +30,12 @@ class Users(Resource):
             return (items,
                      {'message': 'fetched User'}), 200
 
+
+#@token_required
 class Borrow(Resource):
-    @classmethod
-    def post(self, book_id=None):
-        book_instance = Book.query.filter_by(book_id=book_id).first()
+    @token_required
+    def post(self, bookid=None):
+        book_instance = Book.query.filter_by(book_id=bookid).first()
         if not book_instance:
             return {"error": "book not found"}, 404
         # check if book is borrowed

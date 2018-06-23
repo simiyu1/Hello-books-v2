@@ -24,16 +24,12 @@ from app.bookdir.models import Book
 
 class books(Resource):
     @classmethod
-    def get(cls, isbn=None):
-        #return {"Hapa   ndio" : isbn}
-        print(isbn)
-        #isbn = request.args['isbn']
-        print(isbn)
-        if isbn != None:
-            book_to_find = Book.get_by_isbn(isbn)
+    def get(cls, bookid=None):
+        if bookid != None:
+            book_to_find = Book.get_by_id(bookid)
             if not book_to_find:
                 return {'message': 'Item not found'}, 404
-            return ({'book': {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'author': book_to_find.author}},
+            return ({'book': {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'book id': book_to_find.book_id, 'author': book_to_find.author}},
                     {'message': 'Gets a specific book'}), 200
         else:
             return Book.get_many()
@@ -63,12 +59,10 @@ class books(Resource):
             return {"message": "Failed, Book exists"}, 400
 
     @classmethod
-    def delete(self):
-        req_data = request.get_json()
-        if not req_data['ISBN']:
+    def delete(self, bookid=None):
+        if bookid is None:
             return {"message": "book ID expected"}, 406
-        isbn = req_data['ISBN']
-        book_to_delete = Book.get_by_isbn(isbn)
+        book_to_delete = Book.get_by_id(bookid)
         if not book_to_delete:
             return {'message': 'book entry not found'}, 400
         else:
@@ -76,39 +70,37 @@ class books(Resource):
             return {"message": "Success, Book deleted"}, 200
 
     @classmethod
-    def put(self, ISBN=None):
-        thisisbn = request.args['ISBN']
-        if thisisbn == None:
-            return {"message": "book ISBN required"}, 406
+    def put(self, bookid=None):
+        if bookid is None:
+            return {"message": "book id required"}, 406
         req_data = request.get_json()
-        book_to_update = Book.get_by_isbn(thisisbn)
+        book_to_update = Book.get_by_id(bookid)
         if not book_to_update:
             return {"message": "book to update not found"}, 401
-        # if not req_data['ISBN'] or not req_data['author'] or not req_data['title'] or not req_data['copies'] or not \
-        #         req_data['available']:
-        #     return {"message": "book details missing"}, 406
+        if not req_data:
+            return {"message": "book details missing"}, 406
         prev_isbn = book_to_update.isbn
         prev_title = book_to_update.title
         prev_author = book_to_update.author
         prev_copies = book_to_update.copies
         prev_available = book_to_update.available
-        if req_data['ISBN']:
+        if 'ISBN' in req_data:
             isbn = req_data['ISBN']
         else:
             isbn = prev_isbn
-        if req_data['title']:
+        if 'title' in req_data:
             title = req_data['title']
         else:
             title = prev_title
-        if req_data['author']:
+        if 'author' in req_data:
             author = req_data['author']
         else:
             author = prev_author
-        if req_data['available']:
+        if 'available' in req_data:
             available = req_data['available']
         else:
             available = prev_available
-        if req_data['copies']:
+        if 'copies' in req_data:
             copies = req_data['copies']
         else:
             copies = prev_copies
