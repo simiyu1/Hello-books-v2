@@ -3,7 +3,7 @@ from flask_restful import Resource
 from flask import request, jsonify
 from app import bcrypt
 
-from app.userdir.models import User, BlackListToken
+from app.user.models import User, BlackListToken
 from app.auth.helper import response, response_auth
 import re
 
@@ -27,9 +27,9 @@ class Register(Resource):
         password = req_data['password']
         username_exists = User.get_by_username(username)
         email_exists = User.get_by_email(email)
-        if not username_exists or not email_exists:
-            token = User(email=email, password=password, username=username).save()
-            return {"message": "Successfully registered","Token": token}, 200
+        if not username_exists and not email_exists:
+            User(email=email, password=password, username=username).save()
+            return {"message": "Successfully registered"}, 200
         else:
             return {"message": "Failed, Username or email already exists, Please sign In"}, 400
 
@@ -103,11 +103,14 @@ class Logout(Resource):
         if auth_header:
             try:
                 auth_token = auth_header.split(" ")[1]
+                user_id = User.decode_auth_token(auth_token)
             except IndexError:
                 return response('failed', 'Provide a valid auth token', 403)
             else:
                 decoded_token_response = User.decode_auth_token(auth_token)
                 if not isinstance(decoded_token_response, str):
+                    this_user = User.get_by_id(user_id)
+                    this_user.set_loggedin_false()
                     token = BlackListToken(auth_token)
                     token.blacklist()
                     return response('success', 'Successfully logged out', 200)

@@ -1,5 +1,5 @@
 from flask import request, make_response, jsonify
-from app.userdir.models import User
+from app.user.models import User
 from functools import wraps
 
 

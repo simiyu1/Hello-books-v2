@@ -8,7 +8,7 @@ This is a python based API that helps to keeps track of library transactions and
 
 #Specifications
 
-| EndPoint | EndPoint |
+| EndPoint | Functionality |
 | ------------- | ------------- |
 | PUT /api/books/<bookId> |modify a book’s information  |
 |DELETE /api/books/<bookId> | Remove a book  |
