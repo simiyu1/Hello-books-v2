@@ -2,7 +2,7 @@ from flask import Blueprint
 
 auth = Blueprint('authentication', __name__, url_prefix = '/api/v1/auth/')
 from app.auth.views import Register,Login, Reset,Logout
-from app.userdir import user
+from app.user import user
 
 from app import app
 from flask_restful import Api

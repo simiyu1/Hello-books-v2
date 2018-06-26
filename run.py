@@ -1,8 +1,8 @@
 import os
 from flask import Flask
 # Blueprint names
-from app.bookdir import book
-from app.userdir import user
+from app.book import book
+from app.user import user
 from app.auth import auth
 
 from app import app

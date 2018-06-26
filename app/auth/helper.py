@@ -1,5 +1,5 @@
 from flask import request, make_response, jsonify
-from app.userdir import Users
+from app.user.models import User
 from functools import wraps
 
 
@@ -20,28 +20,28 @@ def token_required(f):
             try:
                 token = auth_header.split(" ")[1]
             except IndexError:
-                return make_response(jsonify({
+                return {
                     'status': 'failed',
                     'message': 'Provide a valid auth token'
-                })), 403
+                }
 
         if not token:
-            return make_response(jsonify({
+            return {
                 'status': 'failed',
                 'message': 'Token is missing'
-            })), 401
+            }
 
         try:
-            decode_response = Users.decode_auth_token(token)
-            current_user = Users.query.filter_by(id=decode_response).first()
+            decode_response = User.decode_auth_token(token)
+            current_user = User.query.filter_by(id=decode_response).first()
         except:
             message = 'Invalid token'
             if isinstance(decode_response, str):
                 message = decode_response
-            return make_response(jsonify({
+            return {
                 'status': 'failed',
                 'message': message
-            })), 401
+            }
 
         return f(current_user, *args, **kwargs)
 
@@ -56,10 +56,10 @@ def response(status, message, status_code):
     :param status_code: Http status code
     :return:
     """
-    return make_response(jsonify({
+    return {
         'status': status,
         'message': message
-    })), status_code
+    }
 
 
 def response_auth(status, message, token, status_code):
@@ -71,8 +71,8 @@ def response_auth(status, message, token, status_code):
     :param status_code: Http status code
     :return: Http Json response
     """
-    return make_response({
+    return {
         'status': status,
         'message': message,
         'auth_token': token
-    }), status_code
+    }

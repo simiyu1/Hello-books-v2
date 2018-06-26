@@ -2,8 +2,8 @@ import unittest
 import json
 
 from run import app
-from app.bookdir.models import *
-from app.bookdir.views import books_list
+from app.book.models import *
+from app.book.views import books_list
 
 
 class BookAPITests(unittest.TestCase):
@@ -152,7 +152,7 @@ class BookAPITests(unittest.TestCase):
 class UserTests(unittest.TestCase):
     def setUp(self):
         # Prepare for testing;set up variables
-        from app.userdir.views import users_list
+        from app.user.views import users_list
         self.all_users = users_list
         self.app = app
         self.app = self.app.test_client()

@@ -3,22 +3,19 @@ from flask_restful import Resource
 from flask import request, jsonify
 from app import bcrypt
 
-from app.userdir.models import User, BlackListToken
+from app.user.models import User, BlackListToken
 from app.auth.helper import response, response_auth
 import re
-#from app.userdir.views import users_list
-
-
-# small_users_list = []
-# user5 = User(5,'Miguna','pass123')
-# user6 = User(6,'Mboys','pass123')
-# user6.active = True
-# small_users_list.append(user5)
-# small_users_list.append(user6)
 
 
 class Register(Resource):
-    '''User registration Class'''
+    '''User registration Class
+
+    :param email:
+    :param username:
+    :param password:
+    :return: JSON
+    '''
 
     @classmethod
     def post(self):
@@ -28,31 +25,23 @@ class Register(Resource):
         username = req_data['username']
         email = req_data['email']
         password = req_data['password']
-        # exists = [
-        #     user for user in users_list if user.username == username]
-        #
-        # if exists:
-        #     return {"message": "username exists please try another"},409
-        '''if request.content_type == 'application/json':
-            post_data = request.get_json()
-            email = post_data.get('email')
-            password = post_data.get('password')
-            if re.match(r"[^@]+@[^@]+\.[^@]+", email) and len(password) > 4:
-                user = User.get_by_email(email)
-        user_exists = User.get_by_email(email)'''
         username_exists = User.get_by_username(username)
         email_exists = User.get_by_email(email)
-        if not username_exists or not email_exists:
-            token = User(email=email, password=password, username=username).save()
-            # return response_auth('success', 'Successfully registered', token, 201)
-            #return jsonify({"Token": token})
-            return {"message": "Successfully registered","Token": token}, 200
+        if not username_exists and not email_exists:
+            User(email=email, password=password, username=username).save()
+            return {"message": "Successfully registered"}, 200
         else:
             return {"message": "Failed, Username or email already exists, Please sign In"}, 400
 
 
 class Login(Resource):
-    '''User login Class'''
+    '''User login Class
+
+    :param email:
+    :param username: or
+    :param password:
+    :return: JSON
+    '''
 
     @classmethod
     def post(self):
@@ -72,6 +61,13 @@ class Login(Resource):
 
 
 class Reset(Resource):
+    '''User Reset Password Class
+
+        :param username:
+        :param password:
+        :param new_password:
+        :return: JSON
+        '''
 
     @classmethod
     def post(self):
@@ -93,7 +89,6 @@ class Reset(Resource):
             user.reset_password(new_password)
             return response('success', 'Password reset successfully', 200)
         return response('failed', "Incorrect password", 401)
-        return response('failed', 'Content type must be json', 400)
 
 
 class Logout(Resource):
@@ -108,11 +103,14 @@ class Logout(Resource):
         if auth_header:
             try:
                 auth_token = auth_header.split(" ")[1]
+                user_id = User.decode_auth_token(auth_token)
             except IndexError:
                 return response('failed', 'Provide a valid auth token', 403)
             else:
                 decoded_token_response = User.decode_auth_token(auth_token)
                 if not isinstance(decoded_token_response, str):
+                    this_user = User.get_by_id(user_id)
+                    this_user.set_loggedin_false()
                     token = BlackListToken(auth_token)
                     token.blacklist()
                     return response('success', 'Successfully logged out', 200)
