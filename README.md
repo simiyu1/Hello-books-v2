@@ -6,23 +6,23 @@
 
 This is a python based API that helps to keeps track of library transactions and records. It will allow services to connect to the endpoints and register or login users, borrow books, and allow privilleged users to add or edit book information.
 
-#Specifications
+# Specifications
 
-| EndPoint | Functionality |
-| ------------- | ------------- |
-| PUT /api/books/<bookId> |modify a book’s information  |
-|DELETE /api/books/<bookId> | Remove a book  |
-| GET /api/books | Retrieves all books |
-| GET /api/books/<bookId> | Get a book |
-| POST /api/users/books/<bookId> | Borrow a book  |
-| POST /api/auth/register | Creates a user account |
-| POST /api/auth/login | Logs in a user |
-| POST /api/auth/logout | Logs out a user |
-| POST /api/auth/reset-password | Password reset |
+| EndPoint | Functionality | Access Rights |
+| ------------- | ------------- | ------------- |
+| PUT /api/books/<bookId> |modify a book’s information  | Admin only |
+|DELETE /api/books/<bookId> | Remove a book  | Admin only |
+| GET /api/books | Retrieves all books | Logged in users only |
+| GET /api/books/<bookId> | Get a book | Logged in users only |
+| POST /api/users/books/<bookId> | Borrow a book  | Logged in users only |
+| POST /api/auth/register | Creates a user account | Any one |
+| POST /api/auth/login | Logs in a user | Logged in users only |
+| POST /api/auth/logout | Logs out a user | Logged in users only |
+| POST /api/auth/reset-password | Password reset | Logged in users only |
 |  |  |
 
 
-#Installation
+# Installation
 
 
    i. Clone or download the repository
@@ -39,10 +39,15 @@ This is a python based API that helps to keeps track of library transactions and
    iv. Install the environmmental requirements from the file within the virtual venv
        `pip install -r requirements.txt`
 
-   v. Running the tests
+## Running the tests
         `python -m unittest discover -v` (Runs all tests in windows)
        or using nosetests
          `nosetests --with-coverage --cover-package=app`
+
+## Running the API
+    i. Cd into the directory "Hello-Booksv2" the run the command
+        `python run.py`
+        In your terminal
 
 # Documentation
 Find a detailed documentation on the expected data types, and anticipated responce data from this Apiary link https://hello332.docs.apiary.io
