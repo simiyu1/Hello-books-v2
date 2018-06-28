@@ -100,7 +100,6 @@ class User(db.Model):
         """
         results = User.query.filter().paginate(1, 10, True)
         itemized = results.items
-        print(itemized)
         return jsonify({
             "page": results.page,
             "total_results": results.total,
@@ -148,6 +147,17 @@ class User(db.Model):
         self.logged_in = False
         db.session.add(self)
         db.session.commit()
+
+    def make_admin(self):
+        """
+        Elevate user privileges
+        :param user:
+        :return:None
+        """
+        self.role = 'admin'
+        db.session.add(self)
+        db.session.commit()
+        return self.encode_auth_token(self.id)
 
 
 class BlackListToken(db.Model):

@@ -146,7 +146,6 @@ def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        print(request.headers['Authorization'])
         if 'access-token' not in request.headers:
             return {
                        'message': 'Token is missing, login to get token'

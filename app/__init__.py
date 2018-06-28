@@ -4,8 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 
-from config import app_config
-
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 # app configuration

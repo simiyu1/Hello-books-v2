@@ -89,7 +89,6 @@ class Book(db.Model):
         }
         results = Book.search(search_vars)
         itemized = results.items
-        print(itemized)
         return jsonify({
             "page": results.page,
             "total_results": results.total,

@@ -3,7 +3,7 @@ import json
 
 from run import app
 from app.book.models import *
-from app.book.views import books_list
+from app.book.views import *
 
 
 class BookAPITests(unittest.TestCase):
@@ -11,15 +11,6 @@ class BookAPITests(unittest.TestCase):
     def setUp(self):
         """Define test (env) variables and initialize some list data for the app."""
         self.app = app
-        # creating dummy instances.
-        # books_list = []
-        # book1 = Book(1,'The Eleventh Commandment','Jeffrey Archer')
-        # book2 = Book(2,'If Tomorrow Comes','Sidney Sheldon')
-        # book3 = Book(3,'Origin','Dan Brown')
-        # books_list.append(book1)
-        # books_list.append(book2)
-        # books_list.append(book3)
-
         self.app = self.app.test_client()
         self.BASE_URL = 'http://127.0.0.1:5000/api/v1/books/'
 

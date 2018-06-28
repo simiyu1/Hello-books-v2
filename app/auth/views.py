@@ -29,6 +29,31 @@ class Register(Resource):
         email_exists = User.get_by_email(email)
         if not username_exists and not email_exists:
             User(email=email, password=password, username=username).save()
+            return {"message": "Successfully registered"}, 201
+        else:
+            return {"message": "Failed, Username or email already exists, Please sign In"}, 409
+
+class RegisterAdmin(Resource):
+    '''Register an Admin user
+
+    :param email:
+    :param username:
+    :param password:
+    :return: JSON
+    '''
+
+    @classmethod
+    def post(self):
+        req_data = request.get_json()
+        if not req_data['username'] or not req_data['password']:
+            return {"message": "username or password missing"}, 400
+        username = req_data['username']
+        email = req_data['email']
+        password = req_data['password']
+        username_exists = User.get_by_username(username)
+        email_exists = User.get_by_email(email)
+        if not username_exists and not email_exists:
+            User(email=email, password=password, username=username).make_admin()
             return {"message": "Successfully registered"}, 200
         else:
             return {"message": "Failed, Username or email already exists, Please sign In"}, 400
@@ -55,9 +80,9 @@ class Login(Resource):
             user = User.query.filter_by(username=username).first()
             chkemail = User.query.filter_by(email=email).first()
             if user or chkemail and bcrypt.check_password_hash(user.password, password):
-                return response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 200)
-            return response('failed', 'User does not exist or password is incorrect', 401)
-        return {"message":"Check your password or username and try again"}, 401
+                return response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 500)
+            return {'message': 'User does not exist or password is incorrect'}, 401
+        return {"message": "Check your password or username and try again"}, 401
 
 
 class Reset(Resource):
@@ -72,23 +97,47 @@ class Reset(Resource):
     @classmethod
     def post(self):
         req_data = request.get_json()
-        if not req_data['username'] or not req_data['password'] or not req_data['new_password'] or not req_data['confirm_new_password']:
-            return {"message": "make sure to fill all required fields"}, 400
-        username = req_data['username']
-        password = req_data['password']
-        new_password = req_data['new_password']
-        confirm_new_password = req_data['confirm_new_password']
-        user = User.query.filter_by(username=username).first()
-        if not password or not new_password or not confirm_new_password:
-            return response('message', "No user or password found", 400)
-        if bcrypt.check_password_hash(user.password, password.encode('utf-8')):
-            if not new_password == new_password:
-                return response('failed', 'New Passwords do not match', 400)
-            if not len(new_password) > 4:
-                return response('failed', 'New password should be greater than four characters long', 400)
-            user.reset_password(new_password)
-            return response('success', 'Password reset successfully', 200)
-        return response('failed', "Incorrect password", 401)
+        #if not req_data['username'] or not req_data['password'] or not req_data['new_password'] or not req_data['confirm_new_password']:
+            #return {"message": "make sure to fill all required fields"}, 400
+        if not 'username' in req_data or not 'new_password' in req_data or not 'confirm_new_password' in req_data:
+            return {'message': "Make sure to fill all required fields"}, 400
+        else:
+            password = req_data['password']
+            new_password = req_data['new_password']
+            confirm_new_password = req_data['confirm_new_password']
+            auth_header = request.headers.get('Authorization')
+            if auth_header:
+                try:
+                    auth_token = auth_header.split(" ")[1]
+                    user_id = User.decode_auth_token(auth_token)
+                except IndexError:
+                    return response('failed', 'Provide a valid auth token', 403)
+                else:
+                    decoded_token_response = User.decode_auth_token(auth_token)
+                    if not isinstance(decoded_token_response, str):
+                        this_user = User.get_by_id(user_id)
+                        if bcrypt.check_password_hash(this_user.password, password.encode('utf-8')):
+                            if new_password != confirm_new_password:
+                                return response('failed', 'New Passwords do not match', 400)
+                            if not len(new_password) > 4:
+                                return response('failed', 'New password should be greater than four characters long',
+                                                400)
+                            this_user.reset_password(new_password)
+                            return response('success', 'Password reset successfully', 2001)
+                        return response('success', 'Successfully logged out', 2002)
+                    return response('failed', decoded_token_response, 401)
+            return response('failed', 'Provide an authorization header', 403)
+        #######################
+        # if not password or not new_password or not confirm_new_password:
+        #     return response('message', "No user or password found", 400)
+        # if bcrypt.check_password_hash(user.password, password.encode('utf-8')):
+        #     if not new_password == new_password:
+        #         return response('failed', 'New Passwords do not match', 400)
+        #     if not len(new_password) > 4:
+        #         return response('failed', 'New password should be greater than four characters long', 400)
+        #     user.reset_password(new_password)
+        #     return response('success', 'Password reset successfully', 2003)
+        # return response('failed', "Incorrect password", 401)
 
 
 class Logout(Resource):

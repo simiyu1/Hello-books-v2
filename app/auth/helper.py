@@ -71,8 +71,12 @@ def response_auth(status, message, token, status_code):
     :param status_code: Http status code
     :return: Http Json response
     """
-    return {
+    response = jsonify({
         'status': status,
         'message': message,
-        'auth_token': token
-    }
+        'auth_token': token}
+    )
+
+    response.headers['Authorization'] = token
+
+    return response
