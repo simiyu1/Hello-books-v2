@@ -1,5 +1,6 @@
+import json
+import os
 import unittest
-import json, os
 
 from app import db
 from run import app

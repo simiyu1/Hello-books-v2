@@ -1,8 +1,9 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, jsonify
 from app.book.models import Book
 from app.user.models import User
 from utils.json_schema import login_required, admin_required
+
 
 # #Dummy dataset to hold all books in the app
 # books_list = []
@@ -30,10 +31,9 @@ class books(Resource):
             book_to_find = Book.get_by_id(bookid)
             if not book_to_find:
                 return {'message': 'Item not found'}, 404
-            return ({'book': {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'book id': book_to_find.book_id, 'author': book_to_find.author}},
-                    {'message': 'Gets a specific book'}), 200
+            return {'book': {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'book id': book_to_find.book_id, 'author': book_to_find.author, 'message': 'Gets a specific book'}}, 200
         else:
-            return Book.get_many()
+            return Book.get_many(), 200
 
     @classmethod
     def make_response(self, Book):
@@ -64,7 +64,7 @@ class books(Resource):
     @staticmethod
     @admin_required
     @login_required
-    def delete(current_user,  bookid=None):
+    def delete(current_user, bookid=None):
         print(current_user)
         if bookid is None:
             return {"message": "book ID expected"}, 406
