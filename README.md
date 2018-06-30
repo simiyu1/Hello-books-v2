@@ -1,4 +1,5 @@
 # Hello-Booksv2
+[![Build Status](https://travis-ci.org/simiyu1/Hello-books-v2.svg?branch=ch-badges)](https://travis-ci.org/simiyu1/Hello-books-v2)
 [![Coverage Status](https://coveralls.io/repos/github/simiyu1/Hello-books-v2/badge.svg)](https://coveralls.io/github/simiyu1/Hello-books-v2)
 [![Build Status](https://travis-ci.org/simiyu1/Hello-books-v2.svg?branch=develop)](https://travis-ci.org/simiyu1/Hello-books-v2)
 [![Maintainability](https://api.codeclimate.com/v1/badges/11f1077e3fb865fbe06f/maintainability)](https://codeclimate.com/github/simiyu1/Hello-books-v2/maintainability)
