@@ -6,3 +6,4 @@ omit = */python?.?/*
     */usr/*
     */instance/*
     */__init__.py
+    */config.py

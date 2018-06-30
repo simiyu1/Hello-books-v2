@@ -52,6 +52,9 @@ class BookTests(unittest.TestCase):
             "title": "Dancing with the stars",
             "copies": 17
         }
+        #incomplete book details
+        self.test_book_empty = {
+        }
 
         self.tokens = {}
 
@@ -118,7 +121,8 @@ class BookTests(unittest.TestCase):
             "/api/v1/books/",
             data=json.dumps(self.test_book3),
             headers={"content-type": "application/json", 'access-token': self.tokens})
-        get_res = self.client.get(self.BASE_URL3+one_book, content_type='application/json', headers={'access-token': tokens})
+        get_res = self.client.get(self.BASE_URL3 + one_book, content_type='application/json',
+                                  headers={'access-token': tokens})
 
         self.assertIn('Gets a specific book', str(get_res.data))
 
@@ -137,7 +141,8 @@ class BookTests(unittest.TestCase):
             "/api/v1/books/",
             data=json.dumps(self.test_book3),
             headers={"content-type": "application/json", 'access-token': self.tokens})
-        get_res = self.client.get(self.BASE_URL3+one_book, content_type='application/json', headers={'access-token': tokens})
+        get_res = self.client.get(self.BASE_URL3 + one_book, content_type='application/json',
+                                  headers={'access-token': tokens})
 
         self.assertIn('Item not found', str(get_res.data))
 
@@ -156,9 +161,90 @@ class BookTests(unittest.TestCase):
             "/api/v1/books/",
             data=json.dumps(self.test_book3),
             headers={"content-type": "application/json", 'access-token': self.tokens})
-        get_res = self.client.delete(self.BASE_URL3+one_book, content_type='application/json', headers={'access-token': tokens})
+        get_res = self.client.delete(self.BASE_URL3 + one_book, content_type='application/json',
+                                     headers={'access-token': tokens})
 
         self.assertIn('Success, Book deleted', str(get_res.data))
+
+    def test_can_delete_book_fail_no_id(self):
+        one_book = '11'
+        self.client.post(
+            "/api/v1/auth/register_admin",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        res = self.client.post(
+            "/api/v1/auth/login",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        tokens = res.headers['Authorization']
+        res_book = self.client.post(
+            "/api/v1/books/",
+            data=json.dumps(self.test_book3),
+            headers={"content-type": "application/json", 'access-token': self.tokens})
+        get_res = self.client.delete(self.BASE_URL3 + one_book, content_type='application/json',
+                                     headers={'access-token': tokens})
+
+        self.assertIn('book entry not found', str(get_res.data))
+
+    def test_can_edit_book(self):
+        book_id = '1'
+        self.client.post(
+            "/api/v1/auth/register_admin",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        res = self.client.post(
+            "/api/v1/auth/login",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        tokens = res.headers['Authorization']
+        res_book = self.client.post(
+            "/api/v1/books/",
+            data=json.dumps(self.test_book3),
+            headers={"content-type": "application/json", 'access-token': self.tokens})
+        get_res = self.client.put(self.BASE_URL3 + book_id, content_type='application/json',
+                                  data=json.dumps(self.test_book2),
+                                  headers={'access-token': tokens})
+        self.assertIn('Success, Book updated', str(get_res.data))
+
+    def test_can_edit_book_bad_id(self):
+        book_id = '11'
+        self.client.post(
+            "/api/v1/auth/register_admin",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        res = self.client.post(
+            "/api/v1/auth/login",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        tokens = res.headers['Authorization']
+        res_book = self.client.post(
+            "/api/v1/books/",
+            data=json.dumps(self.test_book3),
+            headers={"content-type": "application/json", 'access-token': self.tokens})
+        get_res = self.client.put(self.BASE_URL3 + book_id, content_type='application/json',
+                                  data=json.dumps(self.test_book2),
+                                  headers={'access-token': tokens})
+        self.assertIn('message": "book to update not found', str(get_res.data))
+
+    def test_can_edit_book_no_details(self):
+        book_id = '1'
+        self.client.post(
+            "/api/v1/auth/register_admin",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        res = self.client.post(
+            "/api/v1/auth/login",
+            data=json.dumps(self.test_user_admin),
+            headers={"content-type": "application/json"})
+        tokens = res.headers['Authorization']
+        res_book = self.client.post(
+            "/api/v1/books/",
+            data=json.dumps(self.test_book3),
+            headers={"content-type": "application/json", 'access-token': self.tokens})
+        get_res = self.client.put(self.BASE_URL3 + book_id, content_type='application/json',
+                                  data=json.dumps(self.test_book_empty),
+                                  headers={'access-token': tokens})
+        self.assertIn('message": "book details missing', str(get_res.data))
 
 
 if __name__ == '__main__':

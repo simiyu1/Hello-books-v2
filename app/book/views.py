@@ -65,7 +65,6 @@ class books(Resource):
     @admin_required
     @login_required
     def delete(current_user, bookid=None):
-        print(current_user)
         if bookid is None:
             return {"message": "book ID expected"}, 406
         book_to_delete = Book.get_by_id(bookid)

@@ -3,9 +3,16 @@ sudo: true
 language: python
 python:
   - "2.7"
+  - "3.4"
 install:
   - "pip install -r requirements.txt"
   - "pip install coveralls"
+env:
+  - DB=sqlite
+  - DB=mysql
+  - DB=postgres
+addons:
+  postgresql: "9.4"
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=qohoHiFmoZ5dJGvW3dD0qV9NVk066c3x6
