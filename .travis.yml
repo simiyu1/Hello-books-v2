@@ -19,7 +19,7 @@ notifications:
   webhooks: https://coveralls.io/webhook?repo_token=qohoHiFmoZ5dJGvW3dD0qV9NVk066c3x6
 
 before_script:
-  - psql -c 'create database hb_test_db;' -U postgres
+  - psql -c 'create database hello_books_test;' -U postgres
 
 script:
 - nosetests --with-coverage --cover-package=app
