@@ -1,0 +1,11 @@
+#Files and folders to exclude
+exclude_patterns:
+- "tests/"
+- "spec/"
+- "**/vendor/"
+- "hc-venv/**"
+- ".coverage"
+- ".coveragerc"
+- ".test_auth.py"
+- ".test_book.py"
+- ".idea/**"

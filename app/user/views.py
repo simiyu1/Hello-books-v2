@@ -26,7 +26,7 @@ class Borrow(Resource):
     def post(self, current_user, bookid=None):
         book_instance = Book.query.filter_by(book_id=bookid).first()
         if not book_instance:
-            return {"error": "book not found"}, 404
+            return {"error": "Book not found"}, 404
         # check if book is borrowed
         if not book_instance.available:
             return {"message": "Book unavailable, please try later"}, 400

@@ -2,17 +2,26 @@ language: python
 sudo: true
 language: python
 python:
-  - "2.7"
+  - "3.4"
+services:
+  - postgresql
+
 install:
   - "pip install -r requirements.txt"
   - "pip install coveralls"
+env:
+  - DB=postgres
+addons:
+  postgresql: "9.4"
 
 notifications:
-  webhooks: https://coveralls.io/webhook?repo_token=Crh5vp0x2bwygklTBQaAm42Qe8jxbkpub
+  webhooks: https://coveralls.io/webhook?repo_token=qohoHiFmoZ5dJGvW3dD0qV9NVk066c3x6
 
+before_script:
+  - psql -c 'create database hello_books_test;' -U postgres
 
 script:
-- nosetests --with-coverage --cover-package=app 
+- nosetests --with-coverage --cover-package=app
 
 
 after_success:

@@ -89,8 +89,7 @@ class Book(db.Model):
         }
         results = Book.search(search_vars)
         itemized = results.items
-        print(itemized)
-        return jsonify({
+        return {
             "page": results.page,
             "total_results": results.total,
             "total_pages": results.pages,
@@ -98,7 +97,8 @@ class Book(db.Model):
             "objects": [{'book_id': Book.book_id, 'author': Book.author,
                          'title': Book.title, 'Copies': Book.copies
                          } for Book in itemized
-                        ]})
+                        ],
+            "message":"Books retrieved"}
 
     @staticmethod
     def get_by_isbn(isbn):
