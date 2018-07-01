@@ -1,11 +1,7 @@
-from helper_tests import InitTests
+from tests.helper_tests import InitTests
 
 import json
-import os
 import unittest
-
-from app import db
-from run import app
 
 
 class UserTests(unittest.TestCase):
@@ -53,6 +49,11 @@ class UserTests(unittest.TestCase):
         bookid = '10'
         responce = self.client.post(self.BASE_URL3 + bookid, headers={'access-token': self.tokens})
         self.assertIn('Book not found', str(responce.data))
+
+    def test_can_borrow_book_fail_token(self):
+        bookid = '10'
+        responce = self.client.post(self.BASE_URL3 + bookid)
+        self.assertIn('Token is missing, login to get token', str(responce.data))
 
     def test_can_return_book(self):
         self.res_book

@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from helper_tests import InitTests
+from tests.helper_tests import InitTests
 
 
 class UserTests(unittest.TestCase):

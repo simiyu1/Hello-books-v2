@@ -19,9 +19,7 @@ class Users(Resource):
             return User.get_many()
 
 
-#@token_required
 class Borrow(Resource):
-    #@token_required
     @login_required
     def post(current_user, self, bookid=None):
         book_instance = Book.query.filter_by(book_id=bookid).first()
