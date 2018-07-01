@@ -1,8 +1,8 @@
 from flask_restful import Resource
-from flask import request
 from app.book.models import Book, BorrowedBook
 from app.user.models import User
 from utils.json_schema import login_required, admin_required
+
 
 class Users(Resource):
     @classmethod

@@ -5,10 +5,6 @@ from app.book import models
 
 book = Blueprint('books', __name__, url_prefix='/api/v1/books/')
 
-#from app import create_app
-#from flask_restful import Api
-#app = create_app
-#api = Api(app)
 
 from app import app
 from flask_restful import Api

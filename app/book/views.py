@@ -1,28 +1,7 @@
 from flask_restful import Resource
-from flask import request, jsonify
+from flask import request
 from app.book.models import Book
-from app.user.models import User
 from utils.json_schema import login_required, admin_required
-
-
-# #Dummy dataset to hold all books in the app
-# books_list = []
-# book1 = Book(1,'The Eleventh Commandment','Jeffrey Archer')
-# book2 = Book(2,'If Tomorrow Comes','Sidney Sheldon')
-# book3 = Book(3,'Origin','Dan Brown')
-# book4 = Book(4,'Memory Man','David Baldacci')
-# book5 = Book(5,'A time to kill','John Grisham')
-# book6 = Book(6,'The Pillars of the Earth','Ken Follet')
-# book7 = Book(7,'Done Deal','Ken Follet')
-# book8 = Book(8,'The outlet and Gober','Ken Follet')
-# books_list.append(book1)
-# books_list.append(book2)
-# books_list.append(book3)
-# books_list.append(book4)
-# books_list.append(book5)
-# books_list.append(book6)
-# books_list.append(book7)
-# books_list.append(book8)
 
 class books(Resource):
     @classmethod

@@ -1,6 +1,6 @@
 from app import db
 from datetime import datetime, timedelta
-from flask import jsonify, request
+from flask import request
 
 
 class Book(db.Model):
