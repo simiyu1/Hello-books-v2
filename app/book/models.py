@@ -46,17 +46,8 @@ class Book(db.Model):
         db.session.commit()
         return {"message": "Success", "BookId": self.isbn}, 200
 
-    def tryupdate(self):
-        """Persist the new book in the database
-        :param book:
-        :return:
-        """
-        db.session.add(self)
-        db.session.commit()
-        return {"message": "Success", "BookId": self.isbn}, 200
-
     def book_delete(self):
-        """Persist the new book in the database
+        """Removes book entry from the database
         :param book:
         :return:
         """
@@ -128,21 +119,21 @@ class Book(db.Model):
         Method to perform serch on businesses
         using either name location or category
         """
-        isbn = filters["isbn"]
-        author = filters["author"]
-        title = filters["title"]
-        copies = filters["copies"]
+        # isbn = filters["isbn"]
+        # author = filters["author"]
+        # title = filters["title"]
+        # copies = filters["copies"]
         page = filters["page"]
         limit = filters['limit']
-        query = []
-        if isbn:
-            query.append(Book.isbn.ilike("%" + isbn + "%"))
-        if author:
-            query.append(Book.author.ilike("%" + author + "%"))
-        if title:
-            query.append(Book.title.ilike("%" + title + "%"))
-        if copies:
-            query.append(Book.copies.ilike("%" + copies + "%"))
+        # query = []
+        # if isbn:
+        #     query.append(Book.isbn.ilike("%" + isbn + "%"))
+        # if author:
+        #     query.append(Book.author.ilike("%" + author + "%"))
+        # if title:
+        #     query.append(Book.title.ilike("%" + title + "%"))
+        # if copies:
+        #     query.append(Book.copies.ilike("%" + copies + "%"))
 
         books = Book.query.filter().paginate(page, limit, True)
         #print(books)

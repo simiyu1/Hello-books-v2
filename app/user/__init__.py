@@ -13,4 +13,4 @@ api = Api(app)
 
 api.add_resource(Users, '/api/v1/users/', '/api/v1/users/<int:userid>/')
 api.add_resource(Borrow, '/api/v1/users/books/<int:bookid>')
-api.add_resource(Return, '/api/v1/users/books/<int:bookid>')
+api.add_resource(Return, '/api/v1/users/books/<int:book_id>')
