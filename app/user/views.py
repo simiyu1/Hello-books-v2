@@ -23,7 +23,7 @@ class Users(Resource):
 class Borrow(Resource):
     #@token_required
     @login_required
-    def post(self, current_user, bookid=None):
+    def post(current_user, self, bookid=None):
         book_instance = Book.query.filter_by(book_id=bookid).first()
         if not book_instance:
             return {"error": "Book not found"}, 404
@@ -37,7 +37,7 @@ class Borrow(Resource):
 
 class Return(Resource):
     @login_required
-    def put(current_user, book_id=None):
+    def put(current_user, self, book_id=None):
         book_instance = BorrowedBook.query.filter_by(book_id=book_id).first()
         if not book_instance:
             return {"error": "book not found"}, 404
