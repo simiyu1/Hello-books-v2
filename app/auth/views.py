@@ -79,7 +79,7 @@ class Login(Resource):
         if re.match(r"[^@]+@[^@]+\.[^@]+", email) and len(password) > 4:
             user = User.query.filter_by(username=username).first()
             chkemail = User.query.filter_by(email=email).first()
-            if user or chkemail and bcrypt.check_password_hash(user.password, password):
+            if (user or chkemail) and bcrypt.check_password_hash(user.password, password):
                 return response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 500)
             return {'message': 'User does not exist or password is incorrect'}, 401
         return {"message": "Check your password or username and try again"}, 401
