@@ -2,5 +2,6 @@
 /myvenv
 /myvenv/*
 *.pyc
+.env
 
 
