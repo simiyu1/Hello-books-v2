@@ -1,6 +1,7 @@
 #exclude myvenv virtual env
-/myvenv
-/myvenv/*
+/thisvenv
+/thisvenv/*
 *.pyc
+.env
 
 

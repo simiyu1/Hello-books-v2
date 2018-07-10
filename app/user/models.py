@@ -17,8 +17,7 @@ class User(db.Model):
     registered_on = db.Column(db.DateTime, nullable=False)
     logged_in = db.Column(db.Boolean, default=False, nullable=False)
     role = db.Column(db.String(50), default="normal", nullable=False)
-    #borrow_books = db.relationship('Books', backref='bucket', lazy='dynamic')
-
+    
     def __init__(self, email, password, username):
         self.email = email
         self.username = username

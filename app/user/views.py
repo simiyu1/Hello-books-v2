@@ -45,8 +45,6 @@ class Return(Resource):
 
         if not current_user:
             return 'User details missing', 401
-        #req_data = request.get_json()
-        #this_user = req_data["user_id"]
         book_instance.return_book()
         return {"message": "Return Success"}, 200
 

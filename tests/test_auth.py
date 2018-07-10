@@ -39,7 +39,7 @@ class UserTests(unittest.TestCase):
         self.assertTrue(respo.status_code, 401)
 
     def test_can_logout_user(self):
-        resp = self.client.post(self.BASE_URL + 'logout', content_type='application/json', headers={'access-token': self.tokens})
+        resp = self.client.post(self.BASE_URL + 'logout', content_type='application/json', headers={'access-token': self.tokenuser})
         self.assertEqual(resp.status_code, 200,
                          msg="Successful you are logged out")
 
@@ -47,29 +47,6 @@ class UserTests(unittest.TestCase):
         resp = self.client.post(self.BASE_URL + 'logout', content_type='application/json')
         self.assertEqual(resp.status_code, 200,
                          msg="user unknown")
-
-    # def test_can_get_user_fail(self):
-    #     self.userid = '?userid=117'
-    #     responce = self.client.get(self.BASE_URL + self.userid)
-    #     self.assertEqual(responce.status_code, 404,
-    #                      msg="User not found")
-    #
-    # def test_can_get_users_list_fail(self):
-    #     self.userid = '13'
-    #     responce = self.client.get(self.BASE_URL2 + self.userid, headers={'access-token': self.tokens})
-    #     self.assertEqual(responce.status_code, 404,
-    #                      msg="User not found")
-
-    # def test_can_get_user(self):
-    #     self.userid = '1'
-    #     response = self.client.get(self.BASE_URL2 + self.userid, headers={'access-token': self.tokens})
-    #     self.assertEqual(response.status_code, 200,
-    #                      msg="Gets a specific user")
-    #
-    # def test_can_get_all_users(self):
-    #     responce = self.client.get(self.BASE_URL2, headers={'access-token': self.tokens})
-    #     self.assertEqual(responce.status_code, 200,
-    #                      msg="Fetched User")
 
     def test_can_reset_password(self):
         self.resetdata = {"username": "Mercy Mbiya", 'password': 'pass123', 'new_password': 'pass456',
@@ -83,14 +60,14 @@ class UserTests(unittest.TestCase):
         self.resetdata = {"username": "Mercy Mbiya", 'password': 'pass123', 'new_password': 'canadian123',
                           'confirm_new_password': 'can123'}
         resp = self.client.post(self.BASE_URL + 'reset', data=json.dumps(
-            self.resetdata), content_type='application/json', headers={'access-token': self.tokens})
+            self.resetdata), content_type='application/json', headers={'access-token': self.tokenuser})
         self.assertEqual(resp.status_code, 200,
                          msg="New Passwords do not match")
 
     def test_can_reset_fields_empty(self):
         self.resetdata = {'username': 'Miguna'}
         resp = self.client.post(self.BASE_URL + 'reset', data=json.dumps(
-            self.resetdata), content_type='application/json', headers={'access-token': self.tokens})
+            self.resetdata), content_type='application/json', headers={'access-token': self.tokenuser})
         self.assertEqual(resp.status_code, 400,
                          msg="Make sure to fill all required fields")
 
@@ -98,7 +75,7 @@ class UserTests(unittest.TestCase):
         self.book_data = "11"
         resp = self.client.post('/api/v1/users/books/' + self.book_data,
                                 content_type='application/json',
-                                headers={'access-token': self.tokens})
+                                headers={'access-token': self.tokenuser})
         self.assertEqual(resp.status_code, 404, msg='Book not found')
 
 
@@ -114,7 +91,7 @@ class UserTests(unittest.TestCase):
         self.book_data = "18"
         # send the data
         resp = self.client.post('/api/v1/users/books/' + self.book_data,
-                                content_type='application/json', headers={'access-token': self.tokens})
+                                content_type='application/json', headers={'access-token': self.tokenuser})
         self.assertEqual(resp.status_code, 404, msg='Item not found')
 
 

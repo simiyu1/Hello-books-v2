@@ -119,27 +119,10 @@ class Book(db.Model):
         Method to perform serch on businesses
         using either name location or category
         """
-        # isbn = filters["isbn"]
-        # author = filters["author"]
-        # title = filters["title"]
-        # copies = filters["copies"]
         page = filters["page"]
         limit = filters['limit']
-        # query = []
-        # if isbn:
-        #     query.append(Book.isbn.ilike("%" + isbn + "%"))
-        # if author:
-        #     query.append(Book.author.ilike("%" + author + "%"))
-        # if title:
-        #     query.append(Book.title.ilike("%" + title + "%"))
-        # if copies:
-        #     query.append(Book.copies.ilike("%" + copies + "%"))
-
         books = Book.query.filter().paginate(page, limit, True)
-        #print(books)
-
         return books
-
 
 class BorrowedBook(db.Model):
     """Holds details about borrowed books

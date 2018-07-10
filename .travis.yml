@@ -9,8 +9,7 @@ services:
 install:
   - "pip install -r requirements.txt"
   - "pip install coveralls"
-env:
-  - DB=postgres
+
 addons:
   postgresql: "9.4"
 

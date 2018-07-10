@@ -97,8 +97,6 @@ class Reset(Resource):
     @classmethod
     def post(self):
         req_data = request.get_json()
-        #if not req_data['username'] or not req_data['password'] or not req_data['new_password'] or not req_data['confirm_new_password']:
-            #return {"message": "make sure to fill all required fields"}, 400
         if not 'username' in req_data or not 'new_password' in req_data or not 'confirm_new_password' in req_data:
             return {'message': "Make sure to fill all required fields"}, 400
         else:
@@ -127,17 +125,6 @@ class Reset(Resource):
                         return response('success', 'Successfully logged out', 2002)
                     return response('failed', decoded_token_response, 401)
             return response('failed', 'Provide an authorization header', 403)
-        #######################
-        # if not password or not new_password or not confirm_new_password:
-        #     return response('message', "No user or password found", 400)
-        # if bcrypt.check_password_hash(user.password, password.encode('utf-8')):
-        #     if not new_password == new_password:
-        #         return response('failed', 'New Passwords do not match', 400)
-        #     if not len(new_password) > 4:
-        #         return response('failed', 'New password should be greater than four characters long', 400)
-        #     user.reset_password(new_password)
-        #     return response('success', 'Password reset successfully', 2003)
-        # return response('failed', "Incorrect password", 401)
 
 
 class Logout(Resource):

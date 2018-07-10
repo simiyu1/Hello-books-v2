@@ -4,26 +4,6 @@ from app.book.models import Book
 from app.user.models import User
 from utils.json_schema import login_required, admin_required
 
-
-# #Dummy dataset to hold all books in the app
-# books_list = []
-# book1 = Book(1,'The Eleventh Commandment','Jeffrey Archer')
-# book2 = Book(2,'If Tomorrow Comes','Sidney Sheldon')
-# book3 = Book(3,'Origin','Dan Brown')
-# book4 = Book(4,'Memory Man','David Baldacci')
-# book5 = Book(5,'A time to kill','John Grisham')
-# book6 = Book(6,'The Pillars of the Earth','Ken Follet')
-# book7 = Book(7,'Done Deal','Ken Follet')
-# book8 = Book(8,'The outlet and Gober','Ken Follet')
-# books_list.append(book1)
-# books_list.append(book2)
-# books_list.append(book3)
-# books_list.append(book4)
-# books_list.append(book5)
-# books_list.append(book6)
-# books_list.append(book7)
-# books_list.append(book8)
-
 class books(Resource):
     @classmethod
     def get(cls, bookid=None):
@@ -55,8 +35,6 @@ class books(Resource):
         isbn_exists = Book.get_by_isbn(ISBN)
         if not isbn_exists:
             Book(ISBN=ISBN, title=title, author=author, copies=copies).save()
-            # return response_auth('success', 'Successfully registered', token, 201)
-            # return jsonify({"Token": token})
             return {"message": "book added"}, 200
         else:
             return {"message": "Failed, Book exists"}, 400
@@ -80,9 +58,6 @@ class books(Resource):
     def put(current_user, bookid=None):
         if bookid is None:
             return {"message": "book id required"}, 406
-        # this_user = User.get_by_id(current_user)
-        # if this_user.role is not "admin":
-        #     return {"message":"You do not have sufficient privileges for this action"}
         req_data = request.get_json()
         book_to_update = Book.get_by_id(bookid)
         if not book_to_update:

@@ -6,12 +6,12 @@ from app.book.models import Book, BorrowedBook
 def validate_field(field, value, error):
     """validates if username is already taken"""
     value = value.strip().lower()
-    tables = {"username": User, "name": Business}
+    tables = {"username": User, "name": Book}
     queries = {}
     if field == "username":
         queries[field] = [User.username.ilike(value)]
     else:
-        queries[field] = [Business.name.ilike(value)]
+        queries[field] = [Book.name.ilike(value)]
     if not value:
         error(field, "Field cannot be empty")
     error(field, "Sorry!! %s taken!" % (field)) if tables[field].query.filter(*queries[field]).first() else ""
