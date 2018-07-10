@@ -36,7 +36,7 @@ class TestingConfig(BaseConfig):
     """
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST')
+    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/hello_books_test"
     BCRYPT_HASH_PREFIX = 4
     AUTH_TOKEN_EXPIRY_DAYS = 0
     AUTH_TOKEN_EXPIRY_SECONDS = 3
