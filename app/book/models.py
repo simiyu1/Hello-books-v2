@@ -1,7 +1,6 @@
 from app import db
 from datetime import datetime, timedelta
 from flask import jsonify, request
-from app.user.models import User
 
 
 class Book(db.Model):
@@ -137,7 +136,7 @@ class BorrowedBook(db.Model):
             """
     __tablename__ = 'borrowed_books'
     borrow_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     book_id = db.Column(db.Integer, db.ForeignKey('books.book_id'))
     borrow_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     return_date = db.Column(db.DateTime, nullable=True)
