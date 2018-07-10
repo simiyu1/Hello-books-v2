@@ -62,9 +62,7 @@ class InitTests:
         #incomplete book details
         self.test_book_empty = {
         }
-
-        self.tokens = {}
-
+        #regiaster and login user
         self.client.post(
             "/api/v1/auth/register_admin",
             data=json.dumps(self.test_user_admin),
@@ -83,25 +81,19 @@ class InitTests:
             data=json.dumps({'username': 'Mercy Mbiya', 'email': 'mbiya@gmail.com', 'password': 'pass123'}),
             headers={"content-type": "application/json"})
 
-        self.tokens = res.headers['Authorization']
+        self.tokenadmin = res.headers['Authorization']
+        self.tokenuser = res1.headers['Authorization']
         self.res_book = self.client.post(
             "/api/v1/books/",
             data=json.dumps(self.test_book),
-            headers={"content-type": "application/json", 'access-token': self.tokens})
+            headers={"content-type": "application/json", 'access-token': self.tokenadmin})
         self.res_book2 = self.client.post(
             "/api/v1/books/",
             data=json.dumps(self.test_book2),
-            headers={"content-type": "application/json", 'access-token': self.tokens})
+            headers={"content-type": "application/json", 'access-token': self.tokenadmin})
         self.borrow_book = self.client.post(
             "/api/v1/users/books/1",
-            headers={"content-type": "application/json", 'access-token': self.tokens})
-
-        self.res1 = self.client.post(
-            "/api/v1/auth/login",
-            data=json.dumps({'username': 'Mercy Mbiya', 'email': 'mbiya@gmail.com', 'password': 'pass123'}),
-            headers={"content-type": "application/json"})
-
-        self.tokens2 = res1.headers['Authorization']
+            headers={"content-type": "application/json", 'access-token': self.tokenuser})
 
 
     def testTearDown(self):
