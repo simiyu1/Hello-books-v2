@@ -9,7 +9,7 @@ exclude_patterns:
 - ".test_auth.py"
 - ".test_book.py"
 - ".idea/**"
-- "htmlcov/**
+- "htmlcov/**"
 - "myvenv/**"
 - "migrations/**"
 - "**/htmlcov/**
