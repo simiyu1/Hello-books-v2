@@ -18,6 +18,9 @@ notifications:
 
 before_script:
   - psql -c 'create database hello_books_test;' -U postgres
+  - python source .env
+  - python manage.py db init
+  - python manage.py db migrate
   - python manage.py db upgrade
 
 script:
