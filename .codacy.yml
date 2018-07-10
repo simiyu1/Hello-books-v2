@@ -1,0 +1,24 @@
+engines:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python
+    checks:
+      Similar code:
+        enabled: false
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "**.py"
+exclude_paths:
+- "**.pyc"
+- "**/migrations/**"
+- "**/htmlcov/**"
+- "**/tests/**"
+- "**/thisvenv/**"
