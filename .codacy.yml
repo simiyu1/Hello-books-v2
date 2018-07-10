@@ -17,8 +17,9 @@ ratings:
   paths:
   - "**.py"
 exclude_paths:
-- "**.pyc"
-- "**/migrations/**"
-- "**/htmlcov/**"
-- "**/tests/**"
-- "**/thisvenv/**"
+- '**.pyc'
+- migrations/**
+- htmlcov/**
+- tests/**
+- thisvenv/**
+- /htmlcov/**
