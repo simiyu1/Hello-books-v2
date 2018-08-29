@@ -173,3 +173,41 @@ class BorrowedBook(db.Model):
         db.session.add(self)
         db.session.commit()
         return {"message": "Successfuly returned"}, 200
+
+    def search(filters):
+        """
+        Method to perform serch on businesses
+        using either name location or category
+        """
+        page = filters["page"]
+        limit = filters['limit']
+        books = BorrowedBook.query.filter().paginate(page, limit, True)
+        return books
+
+    # @staticmethod
+    # def get_many_borrowed():
+    #     """
+    #     Filter a user by Id.
+    #     :param: blank
+    #     :return: Books or None
+    #     """
+    #     search_vars = {
+    #         'page': request.args.get('page', 1, type=int),
+    #         'isbn': request.args.get('isbn', None, type=str),
+    #         'author': request.args.get('author', default=None, type=str),
+    #         'title': request.args.get('title', None, type=str),
+    #         'copies': request.args.get('copies', "10", type=str),
+    #         'limit': request.args.get('limit', 10, type=int)
+    #     }
+    #     results = Book.search(search_vars)
+    #     itemized = results.items
+    #     return {
+    #         "page": results.page,
+    #         "total_results": results.total,
+    #         "total_pages": results.pages,
+    #         "per_page": results.per_page,
+    #         "objects": [{'book_id': Book.book_id, 'author': Book.author,
+    #                      'title': Book.title, 'Copies': Book.copies
+    #                      } for Book in itemized
+    #                     ],
+    #         "message":"Books retrieved"}

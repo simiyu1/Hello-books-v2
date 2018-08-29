@@ -80,7 +80,7 @@ class Login(Resource):
             user = User.query.filter_by(username=username).first()
             chkemail = User.query.filter_by(email=email).first()
             if user or chkemail and bcrypt.check_password_hash(user.password, password):
-                return response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 500)
+                return response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 500, username)
             return {'message': 'User does not exist or password is incorrect'}, 401
         return {"message": "Check your password or username and try again"}, 401
 
