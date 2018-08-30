@@ -176,12 +176,17 @@ class BorrowedBook(db.Model):
 
     def search(filters):
         """
-        Method to perform serch on businesses
-        using either name location or category
+        Method to perform search on books
+        using the following vars
         """
         page = filters["page"]
         limit = filters['limit']
-        books = BorrowedBook.query.filter().paginate(page, limit, True)
+        action = filters['return_status']
+        history = filters['history']
+        if history:
+            books = BorrowedBook.query.filter().paginate(page, limit, True)
+        else:
+            books = BorrowedBook.query.filter_by(return_status=action).paginate(page, limit, True)
         return books
 
     # @staticmethod
