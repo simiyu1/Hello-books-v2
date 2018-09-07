@@ -4,7 +4,7 @@ from flask import request, jsonify
 from app import bcrypt
 
 from app.user.models import User, BlackListToken
-from app.auth.helper import response, response_auth
+from app.auth.helper import response, response_auth, login_response_auth
 import re
 
 
@@ -79,8 +79,15 @@ class Login(Resource):
         if re.match(r"[^@]+@[^@]+\.[^@]+", email) and len(password) > 4:
             user = User.query.filter_by(username=username).first()
             chkemail = User.query.filter_by(email=email).first()
-            if user or chkemail and bcrypt.check_password_hash(user.password, password):
-                return response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 500, username)
+            
+            # this_user_id = User.decode_auth_token(token)
+            # current_user = User.get_by_id(this_user_id)
+            # current_role = current_user.role
+
+
+            if (user or chkemail) and bcrypt.check_password_hash(user.password, password):
+                current_role = user.role
+                return login_response_auth('success', 'Successfully logged In', user.encode_auth_token(user.id), 500, username, current_role )
             return {'message': 'User does not exist or password is incorrect'}, 401
         return {"message": "Check your password or username and try again"}, 401
 
@@ -97,16 +104,20 @@ class Reset(Resource):
     @classmethod
     def post(self):
         req_data = request.get_json()
-        if not 'username' in req_data or not 'new_password' in req_data or not 'confirm_new_password' in req_data:
+        if not 'new_password' in req_data or not 'confirm_new_password' in req_data:
             return {'message': "Make sure to fill all required fields"}, 400
         else:
             password = req_data['password']
             new_password = req_data['new_password']
             confirm_new_password = req_data['confirm_new_password']
-            auth_header = request.headers.get('Authorization')
+            auth_header = request.headers['access_token']
+
+            auth_token = request.headers['access-token']
+            this_user_id = User.decode_auth_token(auth_token)
             if auth_header:
                 try:
-                    auth_token = auth_header.split(" ")[1]
+                    #auth_token = auth_header.split(" ")[1]
+                    auth_token = request.headers['access-token']
                     user_id = User.decode_auth_token(auth_token)
                 except IndexError:
                     return response('failed', 'Provide a valid auth token', 403)
@@ -114,6 +125,9 @@ class Reset(Resource):
                     decoded_token_response = User.decode_auth_token(auth_token)
                     if not isinstance(decoded_token_response, str):
                         this_user = User.get_by_id(user_id)
+                        user = User.query.filter_by(username="Boss Baby").first()
+                        print(">>>>>>>>>>>>>>>>>>>>>",user)
+                        print(bcrypt.check_password_hash(user.password, password.encode('utf-8')))
                         if bcrypt.check_password_hash(this_user.password, password.encode('utf-8')):
                             if new_password != confirm_new_password:
                                 return response('failed', 'New Passwords do not match', 400)
@@ -135,20 +149,41 @@ class Logout(Resource):
         Try to logout a user using a token
         :return: JSon Response
         """
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            try:
-                auth_token = auth_header.split(" ")[1]
-                user_id = User.decode_auth_token(auth_token)
-            except IndexError:
+        #auth_header = request.headers.get('Authorization')
+        token = None
+        if 'access-token' not in request.headers:
+            return response('failed', 'Provide an authorization header', 403)
+        try:
+            auth_token = request.headers['access-token']
+            this_user_id = User.decode_auth_token(auth_token)
+            current_user = User.get_by_id(this_user_id)
+        except IndexError:
                 return response('failed', 'Provide a valid auth token', 403)
-            else:
+        else:
                 decoded_token_response = User.decode_auth_token(auth_token)
                 if not isinstance(decoded_token_response, str):
-                    this_user = User.get_by_id(user_id)
+                    this_user = User.get_by_id(this_user_id)
                     this_user.set_loggedin_false()
                     token = BlackListToken(auth_token)
                     token.blacklist()
                     return response('success', 'Successfully logged out', 200)
                 return response('failed', decoded_token_response, 401)
-        return response('failed', 'Provide an authorization header', 403)
+            
+        ####
+        # auth_header = request.headers['access-token']
+        # if auth_header:
+        #     try:
+        #         auth_token = auth_header.split(" ")[1]
+        #         user_id = User.decode_auth_token(auth_token)
+        #     except IndexError:
+        #         return response('failed', 'Provide a valid auth token', 403)
+        #     else:
+        #         decoded_token_response = User.decode_auth_token(auth_token)
+        #         if not isinstance(decoded_token_response, str):
+        #             this_user = User.get_by_id(user_id)
+        #             this_user.set_loggedin_false()
+        #             token = BlackListToken(auth_token)
+        #             token.blacklist()
+        #             return response('success', 'Successfully logged out', 200)
+        #         return response('failed', decoded_token_response, 401)
+        # return response('failed', 'Provide an authorization header', 403)

@@ -28,6 +28,9 @@ class Borrow(Resource):
         # check if book is borrowed
         if not book_instance.available:
             return {"message": "Book unavailable, please try later"}, 400
+        borrowed_book_instance = BorrowedBook.query.filter_by(book_id=bookid,return_status='false').first()
+        if borrowed_book_instance:
+            return {"error": "book already borrowed"}, 401
         this_user = current_user.id
         BorrowedBook(this_user, book_instance.book_id).save()
         return {"message": "Borrow Success"}, 200
@@ -80,20 +83,20 @@ class MyBorrowed(Resource):
             'user_id': request.args.get('user_id', default=this_user, type=str),
             'return_status': request.args.get('theaction', default=False, type=bool),
             'history': request.args.get('history', default=False, type=bool),
-            'limit': request.args.get('limit', 10, type=int)
+            'limit': request.args.get('limit', 20, type=int)
         }
         results = BorrowedBook.search(search_vars)
         itemized = results.items
         # json.dumps(my_dictionary, indent=4, sort_keys=True, default=str)
-        return jsonify({
+        return {
             "page": results.page,
             "total_results": results.total,
             "total_pages": results.pages,
             "per_page": results.per_page,
             "objects": [{'book_id': Book.book_id, 'user_id': Book.user_id,
-                         'borrow_date': Book.borrow_date, 'return_date': Book.return_date,
+                         'borrow_date': str(Book.borrow_date), 'return_date': str(Book.return_date),
                          'status': Book.return_status, 'log': Book.borrow_id
                          } for Book in itemized
                         ],
-            "message":"View borrowed books Success"}, 200)
+            "message":"View borrowed books Success"}, 200
         # return {"message": 

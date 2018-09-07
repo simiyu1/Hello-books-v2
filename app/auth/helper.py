@@ -34,3 +34,24 @@ def response_auth(status, message, token, status_code, username):
     response.headers['Authorization'] = token
 
     return response
+
+def login_response_auth(status, message, token, status_code, username, role):
+    """
+    Make a Http response to send the auth token
+    :param status: Status
+    :param message: Message
+    :param token: Authorization Token
+    :param status_code: Http status code
+    :return: Http Json response
+    """
+    response = jsonify({
+        'status': status,
+        'message': message,
+        'auth_token': token,
+        'username': username,
+        'role': role}
+    )
+
+    response.headers['Authorization'] = token
+
+    return response

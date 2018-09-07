@@ -86,7 +86,8 @@ class Book(db.Model):
             "total_pages": results.pages,
             "per_page": results.per_page,
             "objects": [{'book_id': Book.book_id, 'author': Book.author,
-                         'title': Book.title, 'Copies': Book.copies
+                         'title': Book.title, 'Copies': Book.copies,
+                         'ISBN': Book.isbn
                          } for Book in itemized
                         ],
             "message":"Books retrieved"}
