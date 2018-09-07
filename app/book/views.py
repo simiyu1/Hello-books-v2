@@ -11,7 +11,7 @@ class books(Resource):
             book_to_find = Book.get_by_id(bookid)
             if not book_to_find:
                 return {'message': 'Item not found'}, 404
-            return {'book': {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'book id': book_to_find.book_id, 'author': book_to_find.author, 'message': 'Gets a specific book'}}, 200
+            return {'ISBN': book_to_find.isbn, 'title': book_to_find.title, 'book_id': book_to_find.book_id, 'Copies': book_to_find.copies,'author': book_to_find.author, 'message': 'Gets a specific book'}, 200
         else:
             return Book.get_many(), 200
 

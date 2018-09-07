@@ -99,7 +99,7 @@ class User(db.Model):
         """
         results = User.query.filter().paginate(1, 10, True)
         itemized = results.items
-        return jsonify({
+        return {
             "page": results.page,
             "total_results": results.total,
             "total_pages": results.pages,
@@ -107,7 +107,17 @@ class User(db.Model):
             "objects": [{'id': User.id, 'username': User.username,
                          'email': User.email, 'Role': User.role, 'Logged in': User.logged_in
                          } for User in itemized
-                        ]}, {"message": "Returns all users"})
+                        ],
+            "message":"Returns all users"}
+        # return jsonify({
+        #     "page": results.page,
+        #     "total_results": results.total,
+        #     "total_pages": results.pages,
+        #     "per_page": results.per_page,
+        #     "objects": [{'id': User.id, 'username': User.username,
+        #                  'email': User.email, 'Role': User.role, 'Logged in': User.logged_in
+        #                  } for User in itemized
+        #                 ]}, {"message": "Returns all users"})
 
     @staticmethod
     def get_by_email(email):
